@@ -11,8 +11,11 @@ function App() {
   /* OPENING UP THE MODAL BOX */
   const [show, setShow] = useState(false);
   const modalRef = useRef();
+  const [whatToShow, setWhatToShow] = useState({ cashIn: 4, cashSaved: 0 });
+  const [forceRerender, setForceRerender] = useState(false);
 
-  const handleShow = () => {
+  const handleShow = (item) => {
+    setWhatToShow({ ...whatToShow, ...item });
     setShow(!show);
   };
 
@@ -23,7 +26,6 @@ function App() {
   };
 
   /* Formatting the date to put in the table */
-
   const formattedDate = new Date().toLocaleString("en-US", {
     year: "numeric",
     month: "long",
@@ -87,10 +89,13 @@ function App() {
         <p className="font-extrabold text-2xl py-4">January</p>
         {/* Table here */}
         <Table handleShow={handleShow} tableItems={tableItems} />
+
         <ModalBox
           handleClickOutside={handleClickOutside}
           handleShow={handleShow}
           show={show}
+          whatToShow={whatToShow}
+          modalRef={modalRef}
         />
       </div>
     </React.Fragment>

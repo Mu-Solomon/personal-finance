@@ -8,9 +8,13 @@ import time from "../assets/svg/time.svg";
 import tag from "../assets/svg/tag.svg";
 
 function Table(props) {
-  const [tableItems, setTableItems] = useState(props.tableItems);
+  const cashInSum = props.tableItems.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.cashIn;
+  }, 0);
 
-  console.log(tableItems);
+  const cashSavedSum = props.tableItems.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue.cashSaved;
+  }, 0);
 
   return (
     <table className="table-auto border-collapse w-full">
@@ -59,11 +63,11 @@ function Table(props) {
         </tr>
       </thead>
       <tbody>
-        {tableItems.map((row, key) => (
+        {props.tableItems.map((row, key) => (
           <tr className=" h-6 " key={key}>
             <td
               className="border-t border-r border-b pt-2 pb-6  pr-16"
-              onClick={props.handleShow}
+              onClick={() => props.handleShow(row)}
             >
               <span className="cursor-pointer	border-gray-600 border-b border-dotted">
                 {row.notes}
@@ -84,17 +88,34 @@ function Table(props) {
                   PEWOSA
                 </span>
               ) : (
-                <span className="bg-green-800 text-white px-1 py-1 rounded hover:bg-blue-700 hover:text-white text-xs">
+                <span className="bg-green-800 text-white px-1 py-1 rounded hover:bg-green-900 hover:text-white text-xs">
                   Personal
                 </span>
               )}
             </td>
-            <td className="border-t border-l border-bpt-2 pb-6 pl-12">
+            <td className="border-t border-l border-b pt-2 pb-6 pl-12">
               {row.entryDate}
             </td>
           </tr>
         ))}
-    
+
+        <tr>
+          <td className="text-right text-sm">
+            {" "}
+            <span className="font-bold ">COUNT</span> {props.tableItems.length}
+          </td>
+          <td className="text-right text-sm"></td>
+          <td className="text-right text-sm">
+            {" "}
+            <span className="font-bold ">TOTAL</span> Ugx{" "}
+            {cashInSum.toLocaleString("en-US")}
+          </td>
+          <td className="text-right text-sm">
+            {" "}
+            <span className="font-bold ">TOTAL</span> Ugx{" "}
+            {cashSavedSum.toLocaleString("en-US")}
+          </td>
+        </tr>
       </tbody>
     </table>
   );
