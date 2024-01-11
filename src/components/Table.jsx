@@ -8,25 +8,17 @@ import time from "../assets/svg/time.svg";
 import tag from "../assets/svg/tag.svg";
 
 function Table(props) {
-  const cashInSum = props.tableItems.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.cashIn;
-  }, 0);
-
-  const cashSavedSum = props.tableItems.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.cashSaved;
-  }, 0);
-
   return (
     <table className="table-auto border-collapse w-full">
       <thead>
         <tr>
-          <th className="text-left">
-            <span className="flex items-center">
+          <th className={`text-left ${!props.showFilter ? "border-r" : ""}`}>
+            <span className="flex items-center my-2">
               <img src={notesIcon} alt="Notes icon" className="w-4 mr-1" />
               Notes
             </span>
           </th>
-          <th className="text-left">
+          <th className={`text-left ${!props.showFilter ? "border-r" : ""}`}>
             <span className="flex items-center">
               <img
                 src={dateIcon}
@@ -36,19 +28,19 @@ function Table(props) {
               Date
             </span>
           </th>
-          <th className="text-left">
+          <th className={`text-left ${!props.showFilter ? "border-r" : ""}`}>
             <span className="flex items-center">
               <img src={cashIN} alt="Cash In icon" className="w-6 mr-1" />
               Cash In
             </span>
           </th>
-          <th className="text-left">
+          <th className={`text-left ${!props.showFilter ? "border-r" : ""}`}>
             <span className="flex items-center">
               <img src={cashSaved} alt="Cash saved icon" className="w-6 mr-1" />
               Cash saved
             </span>
           </th>
-          <th className="text-left">
+          <th className={`text-left ${!props.showFilter ? "border-r" : ""}`}>
             <span className="flex items-center">
               <img src={tag} alt="Cash saved icon" className="w-6 mr-1" />
               Tag
@@ -108,12 +100,12 @@ function Table(props) {
           <td className="text-right text-sm">
             {" "}
             <span className="font-bold ">TOTAL</span> Ugx{" "}
-            {cashInSum.toLocaleString("en-US")}
+            {props.cashInSum.toLocaleString("en-US")}
           </td>
           <td className="text-right text-sm">
             {" "}
             <span className="font-bold ">TOTAL</span> Ugx{" "}
-            {cashSavedSum.toLocaleString("en-US")}
+            {props.cashSavedSum.toLocaleString("en-US")}
           </td>
         </tr>
       </tbody>

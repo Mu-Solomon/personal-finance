@@ -6,13 +6,13 @@ import React, { useRef, useState, useEffect } from "react";
 import Table from "./components/Table";
 import Months from "./components/Months";
 import ModalBox from "./components/ModalBox";
+import Filter from "./components/Filter";
 
 function App() {
   /* OPENING UP THE MODAL BOX */
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false); /* Showing Modal */
   const modalRef = useRef();
   const [whatToShow, setWhatToShow] = useState({ cashIn: 4, cashSaved: 0 });
-  const [forceRerender, setForceRerender] = useState(false);
 
   const handleShow = (item) => {
     setWhatToShow({ ...whatToShow, ...item });
@@ -42,25 +42,178 @@ function App() {
     day: "numeric",
   });
 
+  const [monthNumber, setMonthNumber] = useState(0);
+
+  const months = [
+    {
+      name: "January",
+      colour: "bg-indigo-800",
+      days: [
+        {
+          notes: "Sente z'ekibiina ",
+          date: shortFormatDate,
+          cashIn: 500000,
+          cashSaved: 350000,
+          tag: "PEWOSA",
+          entryDate: formattedDate,
+        },
+        {
+          notes: "Sente z'awaka",
+          date: shortFormatDate,
+          cashIn: 800000,
+          cashSaved: 400000,
+          tag: "Personal",
+          entryDate: formattedDate,
+        },
+      ],
+    },
+    {
+      name: "February",
+      colour: "bg-green-800",
+      days: [
+        {
+          notes: "1st February money ",
+          date: shortFormatDate,
+          cashIn: 12500000,
+          cashSaved: 8750000,
+          tag: "Personal",
+          entryDate: formattedDate,
+        },
+        {
+          notes: "My initial income",
+          date: shortFormatDate,
+          cashIn: 14000000,
+          cashSaved: 26700000,
+          tag: "Personal",
+          entryDate: formattedDate,
+        },
+      ],
+    },
+    {
+      name: "March",
+      colour: "bg-pink-500",
+      days: [
+        {
+          notes: "My initial income",
+          date: shortFormatDate,
+          cashIn: 14000000,
+          cashSaved: 26700000,
+          tag: "Personal",
+          entryDate: formattedDate,
+        },
+      ],
+    },
+    { name: "April", colour: "bg-slate-500", days: [] },
+    { name: "May", colour: "bg-amber-500", days: [] },
+    { name: "June", colour: "bg-lime-500", days: [] },
+    { name: "July", colour: "bg-pink-500", days: [] },
+    { name: "August", colour: "bg-purple-500", days: [] },
+    { name: "September", colour: "bg-indigo-500", days: [] },
+    { name: "October", colour: "bg-teal-500", days: [] },
+    { name: "November", colour: "bg-blue-500", days: [] },
+    { name: "December", colour: "bg-cyan-500", days: [] },
+  ];
+
+  const [sortedData, setSortedData] = useState(months);
+  const [sortOrder, setSortOrder] = useState({
+    cashIn: null,
+    cashSaved: null,
+    date: "asc",
+  });
+
+  const [activeSort, setActiveSort] = useState("Date & Time");
+
+  const handleSort = (val) => {
+    const newSortedData = [...sortedData];
+
+    if (newSortedData[monthNumber] && newSortedData[monthNumber].days) {
+      const sortingFunction = (a, b, prop) => {
+        if (prop === "date") {
+          const dateA = new Date(a[prop]) || new Date(0);
+          const dateB = new Date(b[prop]) || new Date(0);
+          return sortOrder[prop] === "desc" ? dateB - dateA : dateA - dateB;
+        } else {
+          const valueA = a[prop] || 0;
+          const valueB = b[prop] || 0;
+          return sortOrder[prop] === "desc" ? valueB - valueA : valueA - valueB;
+        }
+      };
+
+      switch (val) {
+        case "Date & Time":
+          newSortedData[monthNumber].days.sort((a, b) =>
+            sortingFunction(a, b, "date")
+          );
+          setSortOrder({
+            ...sortOrder,
+            date: sortOrder.date === "desc" ? "asc" : "desc",
+            cashIn: null,
+            cashSaved: null,
+          });
+          break;
+        case "Cash In":
+          newSortedData[monthNumber].days.sort((a, b) =>
+            sortingFunction(a, b, "cashIn")
+          );
+          setSortOrder({
+            ...sortOrder,
+            cashIn: sortOrder.cashIn === "desc" ? "asc" : "desc",
+            cashSaved: null,
+            date: null,
+          });
+          break;
+        case "Cash Saved":
+          newSortedData[monthNumber].days.sort((a, b) =>
+            sortingFunction(a, b, "cashSaved")
+          );
+          setSortOrder({
+            ...sortOrder,
+            cashIn: null,
+            cashSaved: sortOrder.cashSaved === "desc" ? "asc" : "desc",
+            date: null,
+          });
+          break;
+        default:
+          // Handle other cases if needed
+          break;
+      }
+    }
+
+    console.log(val);
+    setSortedData(newSortedData);
+    setActiveSort(val);
+  };
+
   /* SHOWING THE TABLE ITEMS */
-  const [tableItems, setTableItems] = useState([
-    {
-      notes: "Sente z'ekibiina ",
-      date: shortFormatDate,
-      cashIn: 500000,
-      cashSaved: 350000,
-      tag: "PEWOSA",
-      entryDate: formattedDate,
-    },
-    {
-      notes: "Sente z'awaka",
-      date: shortFormatDate,
-      cashIn: 100000,
-      cashSaved: 400000,
-      tag: "Personal",
-      entryDate: formattedDate,
-    },
-  ]);
+  /*  const [monthNumber, setMonthNumber] = useState(0); */
+  const monthToShow = sortedData[monthNumber].days;
+
+  /* SHOW THE MONTH DATA THAT IS CLICKED ON */
+  const showMonthData = (value) => {
+    setMonthNumber(value);
+  };
+
+  const cashInSum = monthToShow
+    .reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.cashIn;
+    }, 0)
+    .toLocaleString("en-US");
+
+  const cashSavedSum = monthToShow
+    .reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.cashSaved;
+    }, 0)
+    .toLocaleString("en-US");
+
+  const monthTitle = months[monthNumber].name;
+
+  /* SHOW OR HIDE FILTER */
+  const [showFilter, setShowFilter] = useState(false);
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter);
+  };
+
+  /* FILTERING */
 
   return (
     <React.Fragment>
@@ -77,18 +230,43 @@ function App() {
             <p className="font-bold text-3xl ml-2">Months</p>
           </span>
           {/* Month cards here */}
-          <Months />
+          <Months months={months} showMonthData={showMonthData} />
         </div>
         <hr className="my-8" />
 
-        <span className="flex border-b-2 border-gray-600 w-24">
-          <img src={cashBookIcon} alt="Month icon" className="w-4" />
-          <p className="font-bold text-md ml-2">Cashbook</p>
-        </span>
+        <p className="font-extrabold text-2xl py-4">{monthTitle}</p>
+        <div className="flex justify-between">
+          <span className="flex border-b-2 border-gray-600 w-24">
+            <img src={cashBookIcon} alt="Month icon" className="w-4" />
+            <p className="font-bold text-md ml-2">Cashbook</p>
+          </span>
+          <button
+            className="text-sm px-1 rounded-sm hover:bg-slate-100"
+            onClick={handleShowFilter}
+          >
+            Filter
+          </button>
+        </div>
+
         <hr className="" />
-        <p className="font-extrabold text-2xl py-4">January</p>
+        {showFilter ? (
+          <Filter
+            handleFilter={handleSort}
+            sortOrder={sortOrder}
+            activeSort={activeSort}
+          />
+        ) : (
+          ""
+        )}
+
         {/* Table here */}
-        <Table handleShow={handleShow} tableItems={tableItems} />
+        <Table
+          handleShow={handleShow}
+          tableItems={monthToShow}
+          cashInSum={cashInSum}
+          cashSavedSum={cashSavedSum}
+          showFilter={showFilter}
+        />
 
         <ModalBox
           handleClickOutside={handleClickOutside}
