@@ -2,6 +2,7 @@ import monthIcon from "./assets/svg/month.svg";
 import financeIcon from "./assets/svg/finance-log.svg";
 import cashBookIcon from "./assets/svg/cashbook.svg";
 import searchIcon from "./assets/svg/search.svg";
+import addIcon from "./assets/svg/add.svg";
 
 import React, { useRef, useState, useEffect } from "react";
 import Table from "./components/Table";
@@ -10,6 +11,7 @@ import ModalBox from "./components/ModalBox";
 import Filter from "./components/Filter";
 
 import "./styles/Table.css";
+import Modal from "./components/Add";
 
 function App() {
   /* OPENING UP THE MODAL BOX */
@@ -261,6 +263,18 @@ function App() {
     monthToShow = filteredData;
   };
 
+  const [showModal, setShowModal] = useState(false);
+
+  
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+
   return (
     <React.Fragment>
       <div className="App m-8">
@@ -280,11 +294,15 @@ function App() {
         </div>
         <hr className="my-8" />
         <p className="font-extrabold text-2xl py-4">{monthTitle}</p>
-        <div className="flex justify-between">
-          <span className="flex border-b-2 border-gray-600 w-24">
+        <div className="flex justify-between ">
+          <span className="flex items-center border-b-2 border-gray-600 w-24">
             <img src={cashBookIcon} alt="Month icon" className="w-4" />
             <p className="font-bold text-md ml-2">Cashbook</p>
+            <button onClick={openModal}>
+              <img src={addIcon} className="w-10 ml-6 " alt="Add record" />
+            </button>
           </span>
+
           <span className="flex">
             <button
               className="text-sm px-1 rounded-sm hover:bg-slate-100"
@@ -335,6 +353,7 @@ function App() {
           whatToShow={whatToShow}
           modalRef={modalRef}
         />
+        <Modal showModal={showModal} closeModal={closeModal} />
       </div>
     </React.Fragment>
   );

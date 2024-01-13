@@ -16,3 +16,18 @@
 .slide-out {
   right: -100%;
 }
+
+
+/* Modal.css */
+.custom-modal {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: transparent transparent; /* Firefox */
+
+  &::-webkit-scrollbar {
+    width: 12px; /* Safari and Chrome */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent; /* Safari and Chrome */
+  }
+}
