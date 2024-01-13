@@ -1,12 +1,15 @@
 import monthIcon from "./assets/svg/month.svg";
 import financeIcon from "./assets/svg/finance-log.svg";
 import cashBookIcon from "./assets/svg/cashbook.svg";
+import searchIcon from "./assets/svg/search.svg";
 
 import React, { useRef, useState, useEffect } from "react";
 import Table from "./components/Table";
 import Months from "./components/Months";
 import ModalBox from "./components/ModalBox";
 import Filter from "./components/Filter";
+
+import "./styles/Table.css";
 
 function App() {
   /* OPENING UP THE MODAL BOX */
@@ -186,7 +189,7 @@ function App() {
 
   /* SHOWING THE TABLE ITEMS */
   /*  const [monthNumber, setMonthNumber] = useState(0); */
-  const monthToShow = sortedData[monthNumber].days;
+  var monthToShow = sortedData[monthNumber].days;
 
   /* SHOW THE MONTH DATA THAT IS CLICKED ON */
   const showMonthData = (value) => {
@@ -213,7 +216,50 @@ function App() {
     setShowFilter(!showFilter);
   };
 
-  /* FILTERING */
+  /* SHOW OR HID INPUT FOR SEARCH */
+
+  const [isInputVisible, setIsInputVisible] = useState(false);
+  const [width, setWidth] = useState("w-0 opacity-0");
+
+  const handleShowInput = () => {
+    setIsInputVisible(!isInputVisible);
+    setWidth(isInputVisible ? "w-0 opacity-0" : "w-50 opacity-1");
+    console.log(width);
+  };
+
+  const [filteredData, setFilteredData] = useState([...monthToShow]);
+  const [wordEntered, setWordEntered] = useState("");
+
+  const handleSearch = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+
+    const filterData = [...months];
+    const filteredDays = filterData[monthNumber].days.filter((value) => {
+      return value.notes
+        .toLocaleLowerCase()
+        .includes(searchWord.toLocaleLowerCase());
+    });
+
+    // Create a new array with the filtered days
+    const updatedMonths = filterData.map((month, index) => {
+      if (index === monthNumber) {
+        return {
+          ...month,
+          days: filteredDays,
+        };
+      }
+      return month;
+    });
+
+    // Set the updated array to the state
+    setSortedData(updatedMonths);
+  };
+
+  const setMonthToShow = (filteredData) => {
+    // Update monthToShow based on filteredData or other logic as needed
+    monthToShow = filteredData;
+  };
 
   return (
     <React.Fragment>
@@ -233,19 +279,33 @@ function App() {
           <Months months={months} showMonthData={showMonthData} />
         </div>
         <hr className="my-8" />
-
         <p className="font-extrabold text-2xl py-4">{monthTitle}</p>
         <div className="flex justify-between">
           <span className="flex border-b-2 border-gray-600 w-24">
             <img src={cashBookIcon} alt="Month icon" className="w-4" />
             <p className="font-bold text-md ml-2">Cashbook</p>
           </span>
-          <button
-            className="text-sm px-1 rounded-sm hover:bg-slate-100"
-            onClick={handleShowFilter}
-          >
-            Filter
-          </button>
+          <span className="flex">
+            <button
+              className="text-sm px-1 rounded-sm hover:bg-slate-100"
+              onClick={handleShowFilter}
+            >
+              Filter
+            </button>
+            <button onClick={handleShowInput}>
+              <img src={searchIcon} className="w-5 ml-3 hover:bg-slate-100" />
+            </button>
+
+            <input
+              type="text"
+              name="Type here to search..."
+              placeholder="Type here to search..."
+              id=""
+              value={wordEntered}
+              className={`px-2 py-1 border-gray-300 transition-all ${width} duration-300 ease-in-out`}
+              onChange={(event) => handleSearch(event)}
+            />
+          </span>
         </div>
 
         <hr className="" />
