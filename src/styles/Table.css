@@ -1,15 +1,14 @@
 .search-icon-expanded {
-    margin-left: -50px; /* Adjust as needed */
-  }
-  
-  input {
-    width: 0;
-    opacity: 0;
-    transition: width 0.3s ease, opacity 0.3s ease;
-  }
-  
-  input:focus {
-    width: 220px; /* Adjust as needed */
-    opacity: 1;
-  }
-  
+  margin-left: -50px; /* Adjust as needed */
+}
+
+input {
+  /* width: 0;
+    opacity: 0; */
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+input:focus {
+  /*   width: 220px; /* Adjust as needed */
+  /*opacity: 1; */
+}
