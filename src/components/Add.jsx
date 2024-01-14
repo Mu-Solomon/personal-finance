@@ -1,26 +1,14 @@
 import React, { useState } from "react";
 
-const Modal = ({ showModal, closeModal }) => {
-  const [cashIn, setCashIn] = useState("");
-  const [cashSaved, setCashSaved] = useState("");
-
+const Modal = ({
+  showModal,
+  closeModal,
+  record,
+  handleRecord,
+  saveRecord,
+  handleTag,
+}) => {
   const modalClassName = showModal ? "block" : "hidden";
-
-  // Format number with commas
-  const formatNumber = (value) => {
-    return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-
-  const handleCashInChange = (event) => {
-    const formattedValue = formatNumber(event.target.value);
-    setCashIn(formattedValue);
-  };
-
-  const handleCashSavedChange = (event) => {
-    const formattedValue = formatNumber(event.target.value);
-    setCashSaved(formattedValue);
-  };
-
   return (
     <div className={`fixed inset-0 bg-black bg-opacity-50 ${modalClassName}`}>
       <div className="container mx-auto p-8 w-2/3">
@@ -28,7 +16,10 @@ const Modal = ({ showModal, closeModal }) => {
           <p className="font-extrabold text-3xl text-center">Add New Record</p>
           <div className="mx-20">
             <div className="mb-8">
-              <label htmlFor="notes" className="block text-gray-700 text-sm mb-2">
+              <label
+                htmlFor="notes"
+                className="block text-gray-700 text-sm mb-2"
+              >
                 NOTES
               </label>
               <div className="flex items-center">
@@ -38,12 +29,19 @@ const Modal = ({ showModal, closeModal }) => {
                   className="border font-bold  rounded-sm w-full py-4 px-6 text-gray-700 leading-tight focus:border-indigo-600 focus:shadow-outline"
                   type="text"
                   placeholder="Your Notes"
+                  value={record?.notes || ""}
+                  onChange={(event) =>
+                    handleRecord("notes", event.target.value)
+                  }
                 />
               </div>
             </div>
             <div className="mb-8">
-              <label htmlFor="date" className="block text-gray-700 text-sm mb-2">
-                DATES
+              <label
+                htmlFor="date"
+                className="block text-gray-700 text-sm mb-2"
+              >
+                DATE
               </label>
               <div className="flex items-center">
                 <input
@@ -52,11 +50,16 @@ const Modal = ({ showModal, closeModal }) => {
                   className="border font-bold  rounded-sm w-full py-4 px-6 text-gray-700 leading-tight focus:border-indigo-600 focus:shadow-outline"
                   type="date"
                   placeholder="Your Notes"
+                  value={record?.date || ""}
+                  onChange={(event) => handleRecord("date", event.target.value)}
                 />
               </div>
             </div>{" "}
             <div className="mb-8">
-              <label htmlFor="cashIn" className="block text-gray-700 text-sm mb-2">
+              <label
+                htmlFor="cashIn"
+                className="block text-gray-700 text-sm mb-2"
+              >
                 CASH IN
               </label>
               <div className="flex items-center">
@@ -66,13 +69,19 @@ const Modal = ({ showModal, closeModal }) => {
                   className="border font-bold  rounded-sm w-full py-4 px-6 text-gray-700 leading-tight focus:border-indigo-600 focus:shadow-outline"
                   type="text"
                   placeholder="Money received"
-                  value={cashIn}
-                  onChange={handleCashInChange}
+                  value={record?.cashIn || ""}
+                  /* onChange={handleCashInChange} */
+                  onChange={(event) =>
+                    handleRecord("cashIn", event.target.value)
+                  }
                 />
               </div>
             </div>{" "}
             <div className="mb-8">
-              <label htmlFor="cashSaved" className="block text-gray-700 text-sm mb-2">
+              <label
+                htmlFor="cashSaved"
+                className="block text-gray-700 text-sm mb-2"
+              >
                 CASH SAVED
               </label>
               <div className="flex items-center">
@@ -82,8 +91,11 @@ const Modal = ({ showModal, closeModal }) => {
                   className="border font-bold  rounded-sm w-full py-4 px-6 text-gray-700 leading-tight focus:border-indigo-600 focus:shadow-outline"
                   type="text"
                   placeholder="Money saved"
-                  value={cashSaved}
-                  onChange={handleCashSavedChange}
+                  value={record?.cashSaved || ""}
+                  /* onChange={handleCashSavedChange} */
+                  onChange={(event) =>
+                    handleRecord("cashSaved", event.target.value)
+                  }
                 />
               </div>
             </div>{" "}
@@ -92,10 +104,16 @@ const Modal = ({ showModal, closeModal }) => {
                 TAG
               </label>
               <div className="flex items-center">
-                <span className="bg-blue-500 text-white px-1 py-1 rounded hover:bg-blue-700 hover:cursor-pointer hover:text-white text-xs">
+                <span
+                  onClick={() => handleTag("PEWOSA")}
+                  className="bg-blue-500 text-white px-1 py-1 rounded hover:bg-blue-700 hover:cursor-pointer hover:text-white text-xs"
+                >
                   PEWOSA
                 </span>
-                <span className="bg-green-800 text-white px-1 py-1 ml-3 rounded hover:bg-green-900 hover:cursor-pointer hover:text-white text-xs">
+                <span
+                  onClick={() => handleTag("Personal")}
+                  className="bg-green-800 text-white px-1 py-1 ml-3 rounded hover:bg-green-900 hover:cursor-pointer hover:text-white text-xs"
+                >
                   Personal
                 </span>
               </div>
@@ -103,7 +121,7 @@ const Modal = ({ showModal, closeModal }) => {
           </div>
           <div className="flex items-center justify-center">
             <button
-              onClick={closeModal}
+              onClick={saveRecord}
               className="bg-black hover:bg-gray-700 text-white font-bold py-4 mb-3 px-12 rounded-full focus:outline-none focus:shadow-outline"
             >
               <span>Finish</span>

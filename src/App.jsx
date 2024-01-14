@@ -47,7 +47,8 @@ function App() {
     day: "numeric",
   });
 
-  const [monthNumber, setMonthNumber] = useState(0);
+  const [monthNumber, setMonthNumber] = useState(new Date().getMonth());
+  /* const [monthNumber, setMonthNumber] = useState(2); */
 
   const months = [
     {
@@ -97,16 +98,7 @@ function App() {
     {
       name: "March",
       colour: "bg-pink-500",
-      days: [
-        {
-          notes: "My initial income",
-          date: shortFormatDate,
-          cashIn: 14000000,
-          cashSaved: 26700000,
-          tag: "Personal",
-          entryDate: formattedDate,
-        },
-      ],
+      days: [],
     },
     { name: "April", colour: "bg-slate-500", days: [] },
     { name: "May", colour: "bg-amber-500", days: [] },
@@ -119,7 +111,19 @@ function App() {
     { name: "December", colour: "bg-cyan-500", days: [] },
   ];
 
-  const [sortedData, setSortedData] = useState(months);
+  const localStorageKey = "monthsData";
+
+  // Initialize sortedData with data from local storage if available
+  const [sortedData, setSortedData] = useState(() => {
+    const storedData = localStorage.getItem(localStorageKey);
+    return storedData ? JSON.parse(storedData) : months;
+  });
+
+  // Save data to localStorage whenever sortedData changes
+  useEffect(() => {
+    localStorage.setItem(localStorageKey, JSON.stringify(sortedData));
+  }, [sortedData]);
+  /* const [sortedData, setSortedData] = useState(months); */
   const [sortOrder, setSortOrder] = useState({
     cashIn: null,
     cashSaved: null,
@@ -265,7 +269,6 @@ function App() {
 
   const [showModal, setShowModal] = useState(false);
 
-  
   const openModal = () => {
     setShowModal(true);
   };
@@ -274,6 +277,78 @@ function App() {
     setShowModal(false);
   };
 
+  //HANGLING ADDING NEW RECORD
+  const entryDate =
+    new Date().toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }) +
+    " at " +
+    new Date().toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+    });
+  const [record, setRecord] = useState({
+    notes: "",
+    date: "",
+    cashIn: "",
+    cashSaved: "",
+    entryDate,
+    tag: "",
+  });
+
+  const formatNumber = (value) => {
+    return value.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  const handleRecord = (field, value) => {
+    setRecord((prevRecord) => ({
+      ...prevRecord,
+      [field]:
+        field === "cashIn" || field === "cashSaved"
+          ? formatNumber(value)
+          : value,
+    }));
+  };
+
+  const saveRecord = () => {
+    const convertedRecord = {
+      ...record,
+      cashIn: parseFloat(record.cashIn.replace(/,/g, "")),
+      cashSaved: parseFloat(record.cashSaved.replace(/,/g, "")),
+      date: new Date(record.date).toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+      entryDate,
+    };
+
+    if (
+      convertedRecord.notes &&
+      convertedRecord.date &&
+      convertedRecord.cashIn &&
+      convertedRecord.cashSaved &&
+      convertedRecord.tag
+    ) {
+      setSortedData((prevData) => {
+        const convertedRecords = [...prevData];
+        convertedRecords[monthNumber].days.unshift(convertedRecord);
+        return convertedRecords;
+      });
+
+      closeModal();
+    }
+    console.log(convertedRecord);
+  };
+
+  const handleTag = (text) => {
+    setRecord((prevRecord) => ({
+      ...prevRecord,
+      tag: text,
+    }));
+  };
 
   return (
     <React.Fragment>
@@ -290,7 +365,11 @@ function App() {
             <p className="font-bold text-3xl ml-2">Months</p>
           </span>
           {/* Month cards here */}
-          <Months months={months} showMonthData={showMonthData} />
+          <Months
+            months={sortedData}
+            showMonthData={showMonthData}
+            monthNumber={monthNumber}
+          />
         </div>
         <hr className="my-8" />
         <p className="font-extrabold text-2xl py-4">{monthTitle}</p>
@@ -353,7 +432,14 @@ function App() {
           whatToShow={whatToShow}
           modalRef={modalRef}
         />
-        <Modal showModal={showModal} closeModal={closeModal} />
+        <Modal
+          showModal={showModal}
+          closeModal={closeModal}
+          record={record}
+          handleRecord={handleRecord}
+          saveRecord={saveRecord}
+          handleTag={handleTag}
+        />
       </div>
     </React.Fragment>
   );

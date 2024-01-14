@@ -1,13 +1,19 @@
 import React from "react";
 
 function Months(props) {
-  const nonEmptyMonths = props.months.filter((month) => month.days.length > 0);
+  const nonEmptyMonths = props.months
+    .map((month, index) => ({
+      ...month,
+      isVisible: month.days.length > 0 || index === props.monthNumber,
+    }))
+    .filter((month) => month.isVisible);
+
   return (
     <div id="month-cards" className="grid grid-cols-6 gap-4 mt-5">
       {nonEmptyMonths.map((month, key) => (
         <button
           id="card"
-          className="shadow-md px-4 py-2  rounded hover:shadow-lg focus:border-2"
+          className="shadow-md px-4 py-2  rounded hover:shadow-lg focus:border-2 focus:border-gray-700"
           key={key}
           onClick={() => props.showMonthData(key)}
         >
