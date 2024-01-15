@@ -356,7 +356,7 @@ function App() {
         <img src={financeIcon} className="w-20 h-20 mb-6" />
         <div className="header">
           <h2 className="text-black font-extrabold text-5xl	">
-            Personal Finance Tracker
+            Kojja's Finance Tracker
           </h2>
         </div>
         <div id="months-outline" className="mt-8">
