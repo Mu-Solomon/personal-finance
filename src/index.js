@@ -20,7 +20,7 @@ const Root = () => {
 
   const handleLogin = () => {
     // Checking if the username and password match the criteria for showing the App component
-    if (credentials.username === "admin" && credentials.password === "kojja1") {
+    if (credentials.username === "kojja" && credentials.password === "kojja1") {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);

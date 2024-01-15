@@ -12,6 +12,7 @@ import Filter from "./components/Filter";
 
 import "./styles/Table.css";
 import Modal from "./components/Add";
+import ExportImportButtons from "./components/ImportExportButtons";
 
 function App() {
   /* OPENING UP THE MODAL BOX */
@@ -350,13 +351,15 @@ function App() {
     }));
   };
 
+  //TRYING EXPORT AND IMPORT BUTTONS
+
   return (
     <React.Fragment>
       <div className="App m-8">
         <img src={financeIcon} className="w-20 h-20 mb-6" />
         <div className="header">
           <h2 className="text-black font-extrabold text-5xl	">
-           KOJJA'S FINANCE TRACKER
+            KOJJA'S FINANCE TRACKER
           </h2>
         </div>
         <div id="months-outline" className="mt-8">
@@ -441,6 +444,7 @@ function App() {
           handleTag={handleTag}
         />
       </div>
+      <ExportImportButtons months={sortedData} setSortedData={setSortedData} />
     </React.Fragment>
   );
 }
