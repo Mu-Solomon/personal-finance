@@ -55,46 +55,12 @@ function App() {
     {
       name: "January",
       colour: "bg-indigo-800",
-      days: [
-        {
-          notes: "Sente z'ekibiina ",
-          date: shortFormatDate,
-          cashIn: 500000,
-          cashSaved: 350000,
-          tag: "PEWOSA",
-          entryDate: formattedDate,
-        },
-        {
-          notes: "Sente z'awaka",
-          date: shortFormatDate,
-          cashIn: 800000,
-          cashSaved: 400000,
-          tag: "Personal",
-          entryDate: formattedDate,
-        },
-      ],
+      days: [],
     },
     {
       name: "February",
       colour: "bg-green-800",
-      days: [
-        {
-          notes: "1st February money ",
-          date: shortFormatDate,
-          cashIn: 12500000,
-          cashSaved: 8750000,
-          tag: "Personal",
-          entryDate: formattedDate,
-        },
-        {
-          notes: "My initial income",
-          date: shortFormatDate,
-          cashIn: 14000000,
-          cashSaved: 26700000,
-          tag: "Personal",
-          entryDate: formattedDate,
-        },
-      ],
+      days: [],
     },
     {
       name: "March",
@@ -189,7 +155,6 @@ function App() {
       }
     }
 
-    console.log(val);
     setSortedData(newSortedData);
     setActiveSort(val);
   };
@@ -231,7 +196,6 @@ function App() {
   const handleShowInput = () => {
     setIsInputVisible(!isInputVisible);
     setWidth(isInputVisible ? "w-0 opacity-0" : "w-50 opacity-1");
-    console.log(width);
   };
 
   const [filteredData, setFilteredData] = useState([...monthToShow]);
@@ -341,7 +305,6 @@ function App() {
 
       closeModal();
     }
-    console.log(convertedRecord);
   };
 
   const handleTag = (text) => {
