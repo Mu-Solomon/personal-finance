@@ -21,8 +21,8 @@ function Login({
             <img
               src={admin}
               className="rounded-full w-32 mx-auto mb-5"
-              alt=""
-              srcset=""
+              alt="Profile pic"
+             
             />
             <span className="text-4xl">KOJJA LOGIN</span>
           </div>

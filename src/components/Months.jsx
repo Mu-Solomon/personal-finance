@@ -29,7 +29,7 @@ function Months(props) {
           </span>
 
           <p className="py-2 text-sm">
-            Income: Ugx{" "}
+            <b>Income:</b> Ugx{" "}
             {month.days
               .reduce((accumulator, previous) => {
                 return accumulator + previous.cashIn;
@@ -37,7 +37,7 @@ function Months(props) {
               .toLocaleString("en-US")}
           </p>
           <p className="py-2 text-sm">
-            Savings: Ugx{" "}
+            <b>Savings:</b> Ugx{" "}
             {month.days
               .reduce((accumulator, previous) => {
                 return accumulator + previous.cashSaved;
